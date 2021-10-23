@@ -1,0 +1,6 @@
+[submodule "lib/vicon_datastream"]
+	path = lib/vicon_datastream
+	url = https://github.com/sarath-menon/vicon_datastream.git
+[submodule "lib/communication_lib"]
+	path = lib/communication_lib
+	url = https://github.com/sarath-menon/communication_lib.git

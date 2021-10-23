@@ -1,0 +1,2 @@
+add_subdirectory(vicon_datastream)
+add_subdirectory(communication_lib)

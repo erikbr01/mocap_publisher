@@ -9,8 +9,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
-// FastDDS 
+// FastDDS
 #include "MocapPubSubTypes.h"
 #include "default_participant.h"
 #include "default_publisher.h"
@@ -198,20 +197,21 @@ std::ostream NullStream(&Null);
 
 int main(int argc, char *argv[]) {
 
-// FastDDS objects
+  // FastDDS objects
 
-// Create participant. Arguments-> Domain id, QOS name
-DefaultParticipant dp(0, "mocap_publisher");
+  // Create participant. Arguments-> Domain id, QOS name
+  DefaultParticipant dp(0, "mocap_publisher");
 
-// Create publisher with msg type
-DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), "mocap_pose", dp.participant());
+  // Create publisher with msg type
+  DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), "mocap_pose",
+                         dp.participant());
 
-// .idl message
-cpp_msg::Mocap mocap_msg;
+  // .idl message
+  cpp_msg::Mocap mocap_msg;
 
-// Initalize mocap_publisher
-mocap_pub.init();
-//////////////////////////////////////////////////////////
+  // Initalize mocap_publisher
+  mocap_pub.init();
+  //////////////////////////////////////////////////////////
 
   // Program options
 
@@ -382,7 +382,6 @@ mocap_pub.init();
       OutputStream << "Frame Number: " << _Output_GetFrameNumber.FrameNumber
                    << std::endl;
 
-
       ////////////////////////////////////////////////////////
       mocap_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
       ////////////////////////////////////////////////////////
@@ -420,10 +419,9 @@ mocap_pub.init();
       OutputStream << "Latency: " << MyClient.GetLatencyTotal().Total << "s"
                    << std::endl;
 
-
-       ///////////////////////////////////////////////////////////////
-       mocap_msg.latency = MyClient.GetLatencyTotal().Total;
-       ///////////////////////////////////////////////////////////////
+      ///////////////////////////////////////////////////////////////
+      mocap_msg.latency = MyClient.GetLatencyTotal().Total;
+      ///////////////////////////////////////////////////////////////
 
       for (unsigned int LatencySampleIndex = 0;
            LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
@@ -455,11 +453,9 @@ mocap_pub.init();
             MyClient.GetSubjectName(SubjectIndex).SubjectName;
         OutputStream << "    Name: " << SubjectName << std::endl;
 
-
         ////////////////////////////////////////////
         mocap_msg.header.id = SubjectName;
         ////////////////////////////////////////////
-
 
         // Get the root segment
         std::string RootSegment =
@@ -597,12 +593,15 @@ mocap_pub.init();
                        << Adapt(_Output_GetSegmentGlobalTranslation.Occluded)
                        << std::endl;
 
-        // Capture position in FastDDS message
-        ////////////////////////////////////////////
-        mocap_msg.pose.position.x = _Output_GetSegmentGlobalTranslation.Translation[0];
-        mocap_msg.pose.position.y =_Output_GetSegmentGlobalTranslation.Translation[1];
-        mocap_msg.pose.position.z =_Output_GetSegmentGlobalTranslation.Translation[2];
-        ////////////////////////////////////////////
+          // Capture position in FastDDS message
+          ////////////////////////////////////////////
+          mocap_msg.pose.position.x =
+              _Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0;
+          mocap_msg.pose.position.y =
+              _Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0;
+          mocap_msg.pose.position.z =
+              _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+          ////////////////////////////////////////////
 
           // Get the global segment rotation in helical co-ordinates
           Output_GetSegmentGlobalRotationHelical
@@ -653,13 +652,17 @@ mocap_pub.init();
               << Adapt(_Output_GetSegmentGlobalRotationQuaternion.Occluded)
               << std::endl;
 
-              // Capture position in FastDDS message
-        ////////////////////////////////////////////
-        mocap_msg.pose.orientation_quat.x = _Output_GetSegmentGlobalRotationQuaternion.Rotation[0];
-        mocap_msg.pose.orientation_quat.y = _Output_GetSegmentGlobalRotationQuaternion.Rotation[1];
-        mocap_msg.pose.orientation_quat.z = _Output_GetSegmentGlobalRotationQuaternion.Rotation[2];
-        mocap_msg.pose.orientation_quat.w = _Output_GetSegmentGlobalRotationQuaternion.Rotation[3];
-        ////////////////////////////////////////////
+          // Capture position in FastDDS message
+          ////////////////////////////////////////////
+          mocap_msg.pose.orientation_quat.x =
+              _Output_GetSegmentGlobalRotationQuaternion.Rotation[0];
+          mocap_msg.pose.orientation_quat.y =
+              _Output_GetSegmentGlobalRotationQuaternion.Rotation[1];
+          mocap_msg.pose.orientation_quat.z =
+              _Output_GetSegmentGlobalRotationQuaternion.Rotation[2];
+          mocap_msg.pose.orientation_quat.w =
+              _Output_GetSegmentGlobalRotationQuaternion.Rotation[3];
+          ////////////////////////////////////////////
 
           // Get the global segment rotation in EulerXYZ co-ordinates
           Output_GetSegmentGlobalRotationEulerXYZ
@@ -763,7 +766,6 @@ mocap_pub.init();
           OutputStream << "    Quality: " << Quality << std::endl;
         }
 
-    
         ////////////////////////////////////
         // Publish data
         mocap_pub.publish(mocap_msg);

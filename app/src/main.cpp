@@ -204,10 +204,10 @@ int main(int argc, char *argv[]) {
 DefaultParticipant dp(0, "mocap_publisher");
 
 // Create publisher with msg type
-DDSPublisher mocap_pub(MocapPubSubType(), "mocap_pose", dp.participant());
+DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), "mocap_pose", dp.participant());
 
 // .idl message
-msgs::Mocap mocap_msg;
+cpp_msg::Mocap mocap_msg;
 
 // Initalize mocap_publisher
 mocap_pub.init();

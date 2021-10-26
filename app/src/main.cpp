@@ -204,10 +204,10 @@ int main(int argc, char *argv[]) {
 DefaultParticipant dp(0, "mocap_publisher");
 
 // Create publisher with msg type
-DDSPublisher mocap_pub(MocapPubSubType(), "mocap_pose", dp.participant());
+DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), "mocap_pose", dp.participant());
 
 // .idl message
-msgs::Mocap mocap_msg;
+cpp_msg::Mocap mocap_msg;
 
 // Initalize mocap_publisher
 mocap_pub.init();
@@ -599,9 +599,9 @@ mocap_pub.init();
 
         // Capture position in FastDDS message
         ////////////////////////////////////////////
-        mocap_msg.pose.position.x = _Output_GetSegmentGlobalTranslation.Translation[0];
-        mocap_msg.pose.position.y =_Output_GetSegmentGlobalTranslation.Translation[1];
-        mocap_msg.pose.position.z =_Output_GetSegmentGlobalTranslation.Translation[2];
+        mocap_msg.pose.position.x = _Output_GetSegmentGlobalTranslation.Translation[0]/1000.0;
+        mocap_msg.pose.position.y =_Output_GetSegmentGlobalTranslation.Translation[1]/1000.0;
+        mocap_msg.pose.position.z =_Output_GetSegmentGlobalTranslation.Translation[2]/1000.0;
         ////////////////////////////////////////////
 
           // Get the global segment rotation in helical co-ordinates

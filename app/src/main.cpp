@@ -195,6 +195,11 @@ std::ostream NullStream(&Null);
 
 } // namespace
 
+// topicname of publisher
+std::string topic = "mocap_pose";
+// name of the object defined in ViCon Tracker
+std::string object_name = "srl_quad";
+
 int main(int argc, char *argv[]) {
 
   // FastDDS objects
@@ -203,8 +208,7 @@ int main(int argc, char *argv[]) {
   DefaultParticipant dp(0, "mocap_publisher");
 
   // Create publisher with msg type
-  DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), "mocap_pose",
-                         dp.participant());
+  DDSPublisher mocap_pub(idl_msg::MocapPubSubType(), topic, dp.participant());
 
   // .idl message
   cpp_msg::Mocap mocap_msg;
@@ -767,9 +771,10 @@ int main(int argc, char *argv[]) {
         }
 
         ////////////////////////////////////
-        // Publish data
-        mocap_pub.publish(mocap_msg);
-        std::cout << "Position published" << std::endl;
+        if (SubjectName.compare(object_name) == 0) {
+          mocap_pub.publish(mocap_msg);
+          std::cout << "Position published" << std::endl;
+        }
         ////////////////////////////////////
       }
     }

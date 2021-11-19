@@ -6,6 +6,7 @@ target_include_directories(mocap_publisher PUBLIC include)
 
 target_link_libraries(mocap_publisher PRIVATE
 comm_lib
+yaml-cpp
 )
 
 # Third party dependencies

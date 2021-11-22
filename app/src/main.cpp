@@ -9,8 +9,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-
-// FastDDS 
+// FastDDS
 #include "MocapPubSubTypes.h"
 #include "default_participant.h"
 #include "default_publisher.h"
@@ -233,6 +232,7 @@ int main(int argc, char *argv[]) {
     mocap_pub.at(i).init();
   }
 
+
   //////////////////////////////////////////////////////////
 
   // Program options
@@ -404,7 +404,6 @@ int main(int argc, char *argv[]) {
       OutputStream << "Frame Number: " << _Output_GetFrameNumber.FrameNumber
                    << std::endl;
 
-
       ////////////////////////////////////////////////////////
       for(int i=0; i<N; i++){
         mocap_msg.at(i).header.timestamp=_Output_GetFrameNumber.FrameNumber;
@@ -449,7 +448,7 @@ int main(int argc, char *argv[]) {
       for(int i=0; i<N; i++){
          mocap_msg.at(i).latency=MyClient.GetLatencyTotal().Total;
       }
-      ///////////////////////////////////////////////////////////////
+
 
       for (unsigned int LatencySampleIndex = 0;
            LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
@@ -481,7 +480,6 @@ int main(int argc, char *argv[]) {
             MyClient.GetSubjectName(SubjectIndex).SubjectName;
         OutputStream << "    Name: " << SubjectName << std::endl;
 
-
         ////////////////////////////////////////////
         for(int i=0; i<N; i++){
           if(SubjectName.compare(parameters::objects.at(i))==0){
@@ -489,7 +487,6 @@ int main(int argc, char *argv[]) {
           }
         }
         ////////////////////////////////////////////
-
 
         // Get the root segment
         std::string RootSegment =
@@ -701,6 +698,7 @@ int main(int argc, char *argv[]) {
         
         ////////////////////////////////////////////
 
+
           // Get the global segment rotation in EulerXYZ co-ordinates
           Output_GetSegmentGlobalRotationEulerXYZ
               _Output_GetSegmentGlobalRotationEulerXYZ =
@@ -803,13 +801,14 @@ int main(int argc, char *argv[]) {
           OutputStream << "    Quality: " << Quality << std::endl;
         }
 
-    
         ////////////////////////////////////
+
         // Publish data
         for(int i=0; i<N; i++){
           if(SubjectName.compare(parameters::objects.at(i))==0){
             mocap_pub.at(i).publish(mocap_msg.at(i));
           }
+
         }
         ////////////////////////////////////
       }

@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(fastcdr REQUIRED)
 find_package(fastrtps REQUIRED)
 
+find_package(yaml-cpp CONFIG REQUIRED)
+
 
 
 add_subdirectory(lib)

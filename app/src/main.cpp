@@ -205,6 +205,9 @@ std::ostream NullStream(&Null);
 // const std::string object_name = "srl_box";
 // const std::string object_topic = "mocap_object_pose";
 
+constexpr static float x_offset = 0.5;
+constexpr static float y_offset = 0.5;
+
 int main(int argc, char *argv[]) {
   // load from YAML File
   set_parameters(paths::parameters_path);
@@ -648,7 +651,31 @@ int main(int argc, char *argv[]) {
                        << ", "
                        << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2]
                        << ")" << std::endl;
-
+          // publish euler Rotation to DDS
+          if (SubjectName.compare("srl_quad") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                quad_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                quad_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                quad_msg.pose.orientation_euler.yaw;
+          }
+          if (SubjectName.compare("srl_box") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                box_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                box_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                box_msg.pose.orientation_euler.yaw;
+          }
+          if (SubjectName.compare("srl_stand") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                stand_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                stand_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                stand_msg.pose.orientation_euler.yaw;
+          }
           // Get the global segment translation
           Output_GetSegmentGlobalTranslation
               _Output_GetSegmentGlobalTranslation =
@@ -682,25 +709,34 @@ int main(int argc, char *argv[]) {
           // }
           if (SubjectName.compare("srl_quad") == 0) {
             quad_msg.pose.position.x =
-                _Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0;
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
             quad_msg.pose.position.y =
-                _Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0;
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
             quad_msg.pose.position.z =
                 _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
           }
           if (SubjectName.compare("srl_box") == 0) {
             box_msg.pose.position.x =
-                _Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0;
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
             box_msg.pose.position.y =
-                _Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0;
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
             box_msg.pose.position.z =
                 _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
           }
           if (SubjectName.compare("srl_stand") == 0) {
             stand_msg.pose.position.x =
-                _Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0;
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
             stand_msg.pose.position.y =
-                _Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0;
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
             stand_msg.pose.position.z =
                 _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
           }

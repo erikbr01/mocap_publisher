@@ -10,13 +10,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 // FastDDS
-#include "MocapPubSubTypes.h"
-#include "default_participant.h"
-#include "default_publisher.h"
-#include "sensor_msgs/msgs/Mocap.h"
-
-#include "DataStreamClient.h"
-
 #include <cassert>
 #include <chrono>
 #include <cstdlib>
@@ -27,16 +20,22 @@
 #include <string>
 #include <vector>
 
+#include "DataStreamClient.h"
+#include "MocapPubSubTypes.h"
+#include "default_participant.h"
+#include "default_publisher.h"
 #include "paths.h"
+#include "sensor_msgs/msgs/Mocap.h"
 #include "set_parameters.h"
 
 #ifdef WIN32
-#include <conio.h>   // For _kbhit()
-#include <cstdio>    // For getchar()
-#include <windows.h> // For Sleep()
+#include <conio.h>    // For _kbhit()
+#include <windows.h>  // For Sleep()
+
+#include <cstdio>  // For getchar()
 #else
-#include <unistd.h> // For sleep()
-#endif              // WIN32
+#include <unistd.h>  // For sleep()
+#endif               // WIN32
 
 #include <string.h>
 #include <time.h>
@@ -49,132 +48,132 @@ std::string Adapt(const bool i_Value) { return i_Value ? "True" : "False"; }
 // Set time standard
 std::string Adapt(const TimecodeStandard::Enum i_Standard) {
   switch (i_Standard) {
-  default:
-  case TimecodeStandard::None:
-    return "0";
-  case TimecodeStandard::PAL:
-    return "1";
-  case TimecodeStandard::NTSC:
-    return "2";
-  case TimecodeStandard::NTSCDrop:
-    return "3";
-  case TimecodeStandard::Film:
-    return "4";
-  case TimecodeStandard::NTSCFilm:
-    return "5";
-  case TimecodeStandard::ATSC:
-    return "6";
+    default:
+    case TimecodeStandard::None:
+      return "0";
+    case TimecodeStandard::PAL:
+      return "1";
+    case TimecodeStandard::NTSC:
+      return "2";
+    case TimecodeStandard::NTSCDrop:
+      return "3";
+    case TimecodeStandard::Film:
+      return "4";
+    case TimecodeStandard::NTSCFilm:
+      return "5";
+    case TimecodeStandard::ATSC:
+      return "6";
   }
 }
 
 // Doubt - Set the direction for i axis
 std::string Adapt(const Direction::Enum i_Direction) {
   switch (i_Direction) {
-  case Direction::Forward:
-    return "Forward";
-  case Direction::Backward:
-    return "Backward";
-  case Direction::Left:
-    return "Left";
-  case Direction::Right:
-    return "Right";
-  case Direction::Up:
-    return "Up";
-  case Direction::Down:
-    return "Down";
-  default:
-    return "Unknown";
+    case Direction::Forward:
+      return "Forward";
+    case Direction::Backward:
+      return "Backward";
+    case Direction::Left:
+      return "Left";
+    case Direction::Right:
+      return "Right";
+    case Direction::Up:
+      return "Up";
+    case Direction::Down:
+      return "Down";
+    default:
+      return "Unknown";
   }
 }
 
 // Enable forceplate input device (not relevant)
 std::string Adapt(const DeviceType::Enum i_DeviceType) {
   switch (i_DeviceType) {
-  case DeviceType::ForcePlate:
-    return "ForcePlate";
-  case DeviceType::Unknown:
-  default:
-    return "Unknown";
+    case DeviceType::ForcePlate:
+      return "ForcePlate";
+    case DeviceType::Unknown:
+    default:
+      return "Unknown";
   }
 }
 
 // Set the unit for state variable
 std::string Adapt(const Unit::Enum i_Unit) {
   switch (i_Unit) {
-  case Unit::Meter:
-    return "Meter";
-  case Unit::Volt:
-    return "Volt";
-  case Unit::NewtonMeter:
-    return "NewtonMeter";
-  case Unit::Newton:
-    return "Newton";
-  case Unit::Kilogram:
-    return "Kilogram";
-  case Unit::Second:
-    return "Second";
-  case Unit::Ampere:
-    return "Ampere";
-  case Unit::Kelvin:
-    return "Kelvin";
-  case Unit::Mole:
-    return "Mole";
-  case Unit::Candela:
-    return "Candela";
-  case Unit::Radian:
-    return "Radian";
-  case Unit::Steradian:
-    return "Steradian";
-  case Unit::MeterSquared:
-    return "MeterSquared";
-  case Unit::MeterCubed:
-    return "MeterCubed";
-  case Unit::MeterPerSecond:
-    return "MeterPerSecond";
-  case Unit::MeterPerSecondSquared:
-    return "MeterPerSecondSquared";
-  case Unit::RadianPerSecond:
-    return "RadianPerSecond";
-  case Unit::RadianPerSecondSquared:
-    return "RadianPerSecondSquared";
-  case Unit::Hertz:
-    return "Hertz";
-  case Unit::Joule:
-    return "Joule";
-  case Unit::Watt:
-    return "Watt";
-  case Unit::Pascal:
-    return "Pascal";
-  case Unit::Lumen:
-    return "Lumen";
-  case Unit::Lux:
-    return "Lux";
-  case Unit::Coulomb:
-    return "Coulomb";
-  case Unit::Ohm:
-    return "Ohm";
-  case Unit::Farad:
-    return "Farad";
-  case Unit::Weber:
-    return "Weber";
-  case Unit::Tesla:
-    return "Tesla";
-  case Unit::Henry:
-    return "Henry";
-  case Unit::Siemens:
-    return "Siemens";
-  case Unit::Becquerel:
-    return "Becquerel";
-  case Unit::Gray:
-    return "Gray";
-  case Unit::Sievert:
-    return "Sievert";
-  case Unit::Katal:
-    return "Katal";
+    case Unit::Meter:
+      return "Meter";
+    case Unit::Volt:
+      return "Volt";
+    case Unit::NewtonMeter:
+      return "NewtonMeter";
+    case Unit::Newton:
+      return "Newton";
+    case Unit::Kilogram:
+      return "Kilogram";
+    case Unit::Second:
+      return "Second";
+    case Unit::Ampere:
+      return "Ampere";
+    case Unit::Kelvin:
+      return "Kelvin";
+    case Unit::Mole:
+      return "Mole";
+    case Unit::Candela:
+      return "Candela";
+    case Unit::Radian:
+      return "Radian";
+    case Unit::Steradian:
+      return "Steradian";
+    case Unit::MeterSquared:
+      return "MeterSquared";
+    case Unit::MeterCubed:
+      return "MeterCubed";
+    case Unit::MeterPerSecond:
+      return "MeterPerSecond";
+    case Unit::MeterPerSecondSquared:
+      return "MeterPerSecondSquared";
+    case Unit::RadianPerSecond:
+      return "RadianPerSecond";
+    case Unit::RadianPerSecondSquared:
+      return "RadianPerSecondSquared";
+    case Unit::Hertz:
+      return "Hertz";
+    case Unit::Joule:
+      return "Joule";
+    case Unit::Watt:
+      return "Watt";
+    case Unit::Pascal:
+      return "Pascal";
+    case Unit::Lumen:
+      return "Lumen";
+    case Unit::Lux:
+      return "Lux";
+    case Unit::Coulomb:
+      return "Coulomb";
+    case Unit::Ohm:
+      return "Ohm";
+    case Unit::Farad:
+      return "Farad";
+    case Unit::Weber:
+      return "Weber";
+    case Unit::Tesla:
+      return "Tesla";
+    case Unit::Henry:
+      return "Henry";
+    case Unit::Siemens:
+      return "Siemens";
+    case Unit::Becquerel:
+      return "Becquerel";
+    case Unit::Gray:
+      return "Gray";
+    case Unit::Sievert:
+      return "Sievert";
+    case Unit::Katal:
+      return "Katal";
 
-  case Unit::Unknown:
-  default:
-    return "Unknown";
+    case Unit::Unknown:
+    default:
+      return "Unknown";
   }
 }
 #ifdef WIN32
@@ -189,14 +188,14 @@ bool Hit() {
 #endif
 
 class NullBuffer : public std::streambuf {
-public:
+ public:
   int overflow(int c) { return c; }
 };
 
 NullBuffer Null;
 std::ostream NullStream(&Null);
 
-} // namespace
+}  // namespace
 
 // const std::vector<std::string> names;
 // const std::vector<std::string> topics;
@@ -206,12 +205,13 @@ std::ostream NullStream(&Null);
 // const std::string object_name = "srl_box";
 // const std::string object_topic = "mocap_object_pose";
 
+constexpr static float x_offset = 0.5;
+constexpr static float y_offset = 0.5;
 
 int main(int argc, char *argv[]) {
-
-  //load from YAML File
+  // load from YAML File
   set_parameters(paths::parameters_path);
-  const int N = parameters::objects.size(); //Number of Objects
+  const int N = parameters::objects.size();  // Number of Objects
 
   ////////////////////////////////////////////////////////////
   // FastDDS objects
@@ -219,19 +219,44 @@ int main(int argc, char *argv[]) {
   // Create participant. Arguments-> Domain id, QOS name
   DefaultParticipant dp(0, "mocap_publisher");
 
-  // Create DDS publisher vector 
-  std::vector<DDSPublisher> mocap_pub;
+  // // Create DDS publisher vector
+  // std::vector<DDSPublisher> mocap_pub;
 
-  // Create Mocap Message Vector
-  std::vector<cpp_msg::Mocap> mocap_msg(N);
+  // // Create Mocap Message Vector
+  // std::vector<cpp_msg::Mocap> mocap_msg(N);
 
-  //Initialize each Element of the vector
-  for(int i=0; i<N; i++){
-    std::string topic = parameters::topic_prefix+parameters::objects.at(i);
-    mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(), topic, dp.participant()));
-    mocap_pub.at(i).init();
-  }
+  // Initialize each Element of the vector
+  // mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(),
+  // "mocap_srl_quad",
+  //                                  dp.participant()));
+  // mocap_pub.at(0).init();
 
+  // mocap_pub.push_back(DDSPublisher(idl_msg::MocapPubSubType(),
+  // "mocap_srl_box",
+  //                                  dp.participant()));
+  // mocap_pub.at(1).init();
+  std::cout << "N:" << N << std::endl;
+  // for (int i = 0; i < N; i++) {
+  //   std::string topic = parameters::topic_prefix + parameters::objects.at(i);
+  //   mocap_pub.push_back(
+  //       DDSPublisher(idl_msg::MocapPubSubType(), topic, dp.participant()));
+  //   mocap_pub.at(i).init();
+  // }
+
+  DDSPublisher quad_pub = DDSPublisher(idl_msg::MocapPubSubType(),
+                                       "mocap_srl_quad", dp.participant());
+  quad_pub.init();
+  cpp_msg::Mocap quad_msg;
+
+  DDSPublisher box_pub = DDSPublisher(idl_msg::MocapPubSubType(),
+                                      "mocap_srl_box", dp.participant());
+  box_pub.init();
+  cpp_msg::Mocap box_msg;
+
+  DDSPublisher stand_pub = DDSPublisher(idl_msg::MocapPubSubType(),
+                                        "mocap_srl_stand", dp.participant());
+  stand_pub.init();
+  cpp_msg::Mocap stand_msg;
 
   //////////////////////////////////////////////////////////
 
@@ -286,7 +311,6 @@ int main(int argc, char *argv[]) {
 
   std::cout << "Connecting to " << HostName << " ..." << std::flush;
   while (!DirectClient.IsConnected().Connected) {
-
     // Direct connection
     const Output_Connect ConnectResult = DirectClient.Connect(HostName);
     const bool ok = (ConnectResult.Result == Result::Success);
@@ -294,19 +318,19 @@ int main(int argc, char *argv[]) {
     if (!ok) {
       std::cout << "Warning - connect failed... ";
       switch (ConnectResult.Result) {
-      case Result::ClientAlreadyConnected:
-        std::cout << "Client Already Connected" << std::endl;
-        break;
-      case Result::InvalidHostName:
-        std::cout << "Invalid Host Name" << std::endl;
-        break;
-      case Result::ClientConnectionFailed:
-        std::cout << "Client Connection Failed" << std::endl;
-        break;
-      default:
-        std::cout << "Unrecognized Error: " << ConnectResult.Result
-                  << std::endl;
-        break;
+        case Result::ClientAlreadyConnected:
+          std::cout << "Client Already Connected" << std::endl;
+          break;
+        case Result::InvalidHostName:
+          std::cout << "Invalid Host Name" << std::endl;
+          break;
+        case Result::ClientConnectionFailed:
+          std::cout << "Client Connection Failed" << std::endl;
+          break;
+        default:
+          std::cout << "Unrecognized Error: " << ConnectResult.Result
+                    << std::endl;
+          break;
       }
     }
 
@@ -329,14 +353,14 @@ int main(int argc, char *argv[]) {
 
     // Set the global up axis
     DirectClient.SetAxisMapping(Direction::Forward, Direction::Left,
-                                Direction::Up); // Z-up
+                                Direction::Up);  // Z-up
 
     if (AxisMapping == "YUp") {
       DirectClient.SetAxisMapping(Direction::Forward, Direction::Up,
-                                  Direction::Right); // Y-up
+                                  Direction::Right);  // Y-up
     } else if (AxisMapping == "XUp") {
       DirectClient.SetAxisMapping(Direction::Up, Direction::Forward,
-                                  Direction::Left); // Y-up
+                                  Direction::Left);  // Y-up
     }
 
     Output_GetAxisMapping _Output_GetAxisMapping =
@@ -405,9 +429,13 @@ int main(int argc, char *argv[]) {
                    << std::endl;
 
       ////////////////////////////////////////////////////////
-      for(int i=0; i<N; i++){
-        mocap_msg.at(i).header.timestamp=_Output_GetFrameNumber.FrameNumber;
-      }
+      // for (int i = 0; i < N; i++) {
+      //   mocap_msg.at(i).header.timestamp =
+      //   _Output_GetFrameNumber.FrameNumber;
+      // }
+      quad_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
+      box_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
+      stand_msg.header.timestamp = _Output_GetFrameNumber.FrameNumber;
       ////////////////////////////////////////////////////////
       Output_GetFrameRate Rate = MyClient.GetFrameRate();
       OutputStream << "Frame rate: " << Rate.FrameRateHz << std::endl;
@@ -443,12 +471,13 @@ int main(int argc, char *argv[]) {
       OutputStream << "Latency: " << MyClient.GetLatencyTotal().Total << "s"
                    << std::endl;
 
-
       ///////////////////////////////////////////////////////////////
-      for(int i=0; i<N; i++){
-         mocap_msg.at(i).latency=MyClient.GetLatencyTotal().Total;
-      }
-
+      // for (int i = 0; i < N; i++) {
+      //   mocap_msg.at(i).latency = MyClient.GetLatencyTotal().Total;
+      // }
+      quad_msg.latency = MyClient.GetLatencyTotal().Total;
+      box_msg.latency = MyClient.GetLatencyTotal().Total;
+      stand_msg.latency = MyClient.GetLatencyTotal().Total;
 
       for (unsigned int LatencySampleIndex = 0;
            LatencySampleIndex < MyClient.GetLatencySampleCount().Count;
@@ -472,7 +501,8 @@ int main(int argc, char *argv[]) {
       unsigned int SubjectCount = MyClient.GetSubjectCount().SubjectCount;
       OutputStream << "Subjects (" << SubjectCount << "):" << std::endl;
       for (unsigned int SubjectIndex = 0; SubjectIndex < SubjectCount;
-           ++SubjectIndex) {
+           ++SubjectIndex) {  ////////////////////////////////////////////for
+                              /// loop starts here
         OutputStream << "  Subject #" << SubjectIndex << std::endl;
 
         // Get the subject name
@@ -481,11 +511,24 @@ int main(int argc, char *argv[]) {
         OutputStream << "    Name: " << SubjectName << std::endl;
 
         ////////////////////////////////////////////
-        for(int i=0; i<N; i++){
-          if(SubjectName.compare(parameters::objects.at(i))==0){
-            mocap_msg.at(i).header.id = SubjectName;
-          }
+        // std::cout << "header: " << SubjectName << std::endl;
+        // std::cout << "header: " << parameters::objects.at(0) << std::endl;
+        // for (int i = 0; i < N; i++) {
+        //   if (SubjectName.compare(parameters::objects.at(i)) == 0) {
+        //     std::cout << "header: " << i << SubjectName << std::endl;
+        //     mocap_msg.at(i).header.id = SubjectName;
+        //   }
+        // }
+        if (SubjectName.compare("srl_quad") == 0) {
+          quad_msg.header.id = SubjectName;
         }
+        if (SubjectName.compare("srl_box") == 0) {
+          box_msg.header.id = SubjectName;
+        }
+        if (SubjectName.compare("srl_stand") == 0) {
+          stand_msg.header.id = SubjectName;
+        }
+
         ////////////////////////////////////////////
 
         // Get the root segment
@@ -608,7 +651,31 @@ int main(int argc, char *argv[]) {
                        << ", "
                        << _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2]
                        << ")" << std::endl;
-
+          // publish euler Rotation to DDS
+          if (SubjectName.compare("srl_quad") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                quad_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                quad_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                quad_msg.pose.orientation_euler.yaw;
+          }
+          if (SubjectName.compare("srl_box") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                box_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                box_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                box_msg.pose.orientation_euler.yaw;
+          }
+          if (SubjectName.compare("srl_stand") == 0) {
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[0] =
+                stand_msg.pose.orientation_euler.roll;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[1] =
+                stand_msg.pose.orientation_euler.pitch;
+            _Output_GetSegmentStaticRotationEulerXYZ.Rotation[2] =
+                stand_msg.pose.orientation_euler.yaw;
+          }
           // Get the global segment translation
           Output_GetSegmentGlobalTranslation
               _Output_GetSegmentGlobalTranslation =
@@ -624,17 +691,57 @@ int main(int argc, char *argv[]) {
                        << Adapt(_Output_GetSegmentGlobalTranslation.Occluded)
                        << std::endl;
 
-        // Capture position in FastDDS message
-        ////////////////////////////////////////////
-        for(int i=0; i<N; i++){
-          if(SubjectName.compare(parameters::objects.at(i))==0){
-            mocap_msg.at(i).pose.position.x = _Output_GetSegmentGlobalTranslation.Translation[0]/1000.0;
-            mocap_msg.at(i).pose.position.y =_Output_GetSegmentGlobalTranslation.Translation[1]/1000.0;
-            mocap_msg.at(i).pose.position.z =_Output_GetSegmentGlobalTranslation.Translation[2]/1000.0;
+          // Capture position in FastDDS message
+          ////////////////////////////////////////////
+          // for (int i = 0; i < N; i++) {
+          //   if (SubjectName.compare(parameters::objects.at(i)) == 0) {
+          //     std::cout << "setting position" << std::endl;
+          //     mocap_msg.at(i).pose.position.x =
+          //         _Output_GetSegmentGlobalTranslation.Translation[0] /
+          //         1000.0;
+          //     mocap_msg.at(i).pose.position.y =
+          //         _Output_GetSegmentGlobalTranslation.Translation[1] /
+          //         1000.0;
+          //     mocap_msg.at(i).pose.position.z =
+          //         _Output_GetSegmentGlobalTranslation.Translation[2] /
+          //         1000.0;
+          //   }
+          // }
+          if (SubjectName.compare("srl_quad") == 0) {
+            quad_msg.pose.position.x =
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
+            quad_msg.pose.position.y =
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
+            quad_msg.pose.position.z =
+                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
           }
-        }
-        
-        ////////////////////////////////////////////
+          if (SubjectName.compare("srl_box") == 0) {
+            box_msg.pose.position.x =
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
+            box_msg.pose.position.y =
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
+            box_msg.pose.position.z =
+                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+          }
+          if (SubjectName.compare("srl_stand") == 0) {
+            stand_msg.pose.position.x =
+                (_Output_GetSegmentGlobalTranslation.Translation[0] / 1000.0) -
+                x_offset;
+            stand_msg.pose.position.y =
+                ((_Output_GetSegmentGlobalTranslation.Translation[1] / 1000.0) +
+                 y_offset) *
+                (-1.0);
+            stand_msg.pose.position.z =
+                _Output_GetSegmentGlobalTranslation.Translation[2] / 1000.0;
+          }
+
+          ////////////////////////////////////////////
 
           // Get the global segment rotation in helical co-ordinates
           Output_GetSegmentGlobalRotationHelical
@@ -685,19 +792,23 @@ int main(int argc, char *argv[]) {
               << Adapt(_Output_GetSegmentGlobalRotationQuaternion.Occluded)
               << std::endl;
 
-              // Capture position in FastDDS message
-        ////////////////////////////////////////////
-        for(int i=0; i<N; i++){
-          if(SubjectName.compare(parameters::objects.at(i))==0){
-            mocap_msg.at(i).pose.orientation_quat.x = _Output_GetSegmentGlobalRotationQuaternion.Rotation[0];
-            mocap_msg.at(i).pose.orientation_quat.y = _Output_GetSegmentGlobalRotationQuaternion.Rotation[1];
-            mocap_msg.at(i).pose.orientation_quat.z = _Output_GetSegmentGlobalRotationQuaternion.Rotation[2];
-            mocap_msg.at(i).pose.orientation_quat.w = _Output_GetSegmentGlobalRotationQuaternion.Rotation[3];
-          }
-        }
-        
-        ////////////////////////////////////////////
+          // Capture position in FastDDS message
+          ////////////////////////////////////////////
+          // for (int i = 0; i < N; i++) {
+          //   if (SubjectName.compare(parameters::objects.at(i)) == 0) {
+          //     std::cout << "setting rotation" << std::endl;
+          //     mocap_msg.at(i).pose.orientation_quat.x =
+          //         _Output_GetSegmentGlobalRotationQuaternion.Rotation[0];
+          //     mocap_msg.at(i).pose.orientation_quat.y =
+          //         _Output_GetSegmentGlobalRotationQuaternion.Rotation[1];
+          //     mocap_msg.at(i).pose.orientation_quat.z =
+          //         _Output_GetSegmentGlobalRotationQuaternion.Rotation[2];
+          //     mocap_msg.at(i).pose.orientation_quat.w =
+          //         _Output_GetSegmentGlobalRotationQuaternion.Rotation[3];
+          //   }
+          // }
 
+          ////////////////////////////////////////////
 
           // Get the global segment rotation in EulerXYZ co-ordinates
           Output_GetSegmentGlobalRotationEulerXYZ
@@ -804,15 +915,22 @@ int main(int argc, char *argv[]) {
         ////////////////////////////////////
 
         // Publish data
-        for(int i=0; i<N; i++){
-          if(SubjectName.compare(parameters::objects.at(i))==0){
-            mocap_pub.at(i).publish(mocap_msg.at(i));
-          }
+        // for (int i = 0; i < N; i++) {
+        //   if (SubjectName.compare(parameters::objects.at(i)) == 0) {
+        //     std::cout << "i:" << i << "prepublish" << std::endl;
+        //     std::cout << parameters::objects.at(i) << std::endl;
 
-        }
+        //     mocap_pub.at(i).publish(mocap_msg.at(i));
+        //     std::cout << "postpublihs" << std::endl;
+        //   }
+        // }
+        quad_pub.publish(quad_msg);
+        box_pub.publish(box_msg);
+        stand_pub.publish(stand_msg);
         ////////////////////////////////////
       }
     }
+
     ++Counter;
   }
 }
